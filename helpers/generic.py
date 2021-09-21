@@ -1,7 +1,6 @@
 from itertools import zip_longest
 
 import numpy
-import umap
 from sklearn.decomposition import PCA
 
 

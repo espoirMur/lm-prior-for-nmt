@@ -1,0 +1,7 @@
+Epoch 5: Average training statistics
+----------------------------------------
+TRAIN	Loss:     8.10	Perplexity:  3307.74
+
+Epoch 5: Average validation statistics
+----------------------------------------
+VALID	Loss:     7.97	Perplexity:  2896.97

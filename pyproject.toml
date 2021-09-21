@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "lm-prior-for-nmt"
+version = "0.1.0"
+description = ""
+authors = ["espoir murhabazi <espoir.mur@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+typing = "~=3.6.6"
+PyYAML = "~=5.1"
+sacrebleu = "~=1.4.2"
+matplotlib = "~=3.0.3"
+tqdm = "~=4.43.0"
+transformers = "~=2.8.0"
+pandas = "~=0.24.2"
+seaborn = "~=0.9.0"
+tabulate = "~=0.8.3"
+oyaml = "~=0.9"
+scikit-learn = "~=0.22.2.post1"
+sentencepiece = "~=0.1.85"
+gensim = "~=3.8.0"
+sacremoses = "~=0.0.35"
+scipy = "~=1.2.1"
+glob2 = "~=0.6"
+Pillow = "^8.3.2"
+visdom = "~=0.1.8.9"
+tensorboard = "^2.6.0"
+torch = "1.6.0"
+torchtext = "0.7.0"
+Jinja2 = "^3.0.1"
+
+[tool.poetry.dev-dependencies]
+pycodestyle = "^2.7.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

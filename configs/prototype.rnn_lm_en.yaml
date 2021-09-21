@@ -16,14 +16,13 @@ optim:
   k: 10
   weight_decay: 0.0
   clip: 1
-
   scheduler: plateau
   step_size: 1
   patience: 2
   eta_min: 0.00001
   min_lr: 0.0001
   gamma: 0.3
-  milestones: [5,15]
+  milestones: [5, 15]
   early_stop: 10
 
 losses:
@@ -34,20 +33,18 @@ losses:
 
 data:
   train_path: ../datasets/mono/prototype/en.train
-  val_path:   ../datasets/mono/prototype/en.valid
+  val_path: ../datasets/mono/prototype/en.valid
   subword_path: ../datasets/mt/wmt_ende/en.16000
-
   seq_len: 250
   sos: True
   vocab_size: 10000
   embeddings:
 
-
 model:
   mode: LM # LM,  AE
   type: rnn
 
-  emb_trainable: True
+  emb_trainable: False
   emb_size: 128
   emb_dropout: 0.1
   emb_layer_norm: False
