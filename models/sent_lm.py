@@ -1,4 +1,6 @@
 import os
+import torch
+import argparse
 from torch.utils.data import DataLoader
 from helpers.opts import exp_options
 from models.sent_lm_callbacks import SentLMSamplesCallback
@@ -39,13 +41,20 @@ def run(config):
                             num_workers=0,
                             pin_memory=False,
                             collate_fn=LMCollate())
+    
+    embedding, missing = train_set.vocab.read_fasttext(config["data"]["embeddings"])
+
+    embedding = torch.from_numpy(embedding).float()
 
     # ------------------------------------------------------------------
     # Model
     # ------------------------------------------------------------------
     ntokens = len(train_set.vocab)
+    print("---" * 10)
+    print("we are training with the following vocabulary {}".format(ntokens))
+    print("---" * 10)
     if config["model"]["type"] == "rnn":
-        model = RNNLM(ntokens, **config["model"])
+        model = RNNLM(ntokens, **config["model"], embeddings=embedding)
     elif config["model"]["type"] == "transformer":
         model = TransformerLM(ntokens, **config["model"])
     else:
@@ -93,9 +102,10 @@ def run(config):
 
 
 if __name__ == "__main__":
-    default_config = os.path.join(MODEL_CNF_DIR,
-                                  # "prototype.trans_lm_en"
-                                  "prototype.rnn_lm_en.yaml"
-                                  )
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, help="configuration file")
+    args, extra_args = parser.parse_known_args()
+    default_config = os.path.join(MODEL_CNF_DIR, args.config)
+    print("the default configurations are ", default_config)
     _config = exp_options(default_config)
     trained_model = run(_config)

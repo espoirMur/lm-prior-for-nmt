@@ -2,7 +2,7 @@ import hashlib
 import json
 import os
 from collections.__init__ import Counter
-
+from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy
 import seaborn as sns
@@ -12,7 +12,6 @@ from sklearn import preprocessing
 from numpy import linalg as LA
 from tqdm import tqdm
 from transformers import GPT2Tokenizer
-
 from helpers.emb_utils import load_embeddings
 
 
@@ -51,6 +50,7 @@ class Vocab(object):
 
         if file is not None:
             assert preprocess is not None, "Need preprocess() to build vocab!"
+            print("building the vocabulary")
             self.build(file, preprocess)
 
     def reset(self):
@@ -150,7 +150,7 @@ class Vocab(object):
         Returns:
 
         """
-        model = FastText.load_fasttext_format(file)
+        model = FastText.load(file)
 
         embeddings = numpy.zeros((len(self), model.vector_size))
 

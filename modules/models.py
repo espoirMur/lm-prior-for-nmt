@@ -26,7 +26,9 @@ class RNNLM(nn.Module):
                            emb_dropout=kwargs["emb_dropout"],
                            trainable=kwargs["emb_trainable"],
                            layer_norm=kwargs["emb_layer_norm"],
-                           max_norm=kwargs["emb_max_norm"])
+                           max_norm=kwargs["emb_max_norm"],
+                           embedding_path=kwargs.get("embedding_path"),
+                           vocab=kwargs.get("vocab"))
 
         self.encoder = RNNEncoder(self.embed, **kwargs)
         assert not self.encoder.rnn.bidirectional
@@ -55,7 +57,7 @@ class RNNLM(nn.Module):
 
     def tie_weights(self):
         if self.tie_projections:
-            self.logits.weight = self.embed.embedding.weight
+            self.logits.weight = self.embed.weight  # need to be adapted to learn what is not embedding from pytorch
 
     def forward(self, x, lengths, hidden=None, c=None):
         results = self.encoder(x, lengths, hidden, c)
@@ -85,8 +87,7 @@ class TransformerLM(nn.Module):
 
         self.tie_projections = tie_projections
         self.ninp = emb_size
-
-        self.embed = Embed(ntoken, emb_size, scale=True)
+        self.embed = Embed(ntoken, emb_size, scale=True, embedding_path=kwargs.get("embedding_path"), vocab=kwargs.get("vocab"))
         self.encoder = TransformerEncoder(hidden_size=emb_size,
                                           ff_size=nhid,
                                           num_layers=nlayers,
@@ -159,7 +160,9 @@ class Seq2SeqRNN(Seq2SeqBase):
                                emb_dropout=kwargs["encoder"]["emb_dropout"],
                                trainable=kwargs["encoder"]["emb_trainable"],
                                layer_norm=kwargs["encoder"]["emb_layer_norm"],
-                               padding_idx=kwargs.get("enc_padding_idx", 0))
+                               padding_idx=kwargs.get("enc_padding_idx", 0),
+                               embedding_path=kwargs.get("embedding_path"),
+                               vocab=kwargs.get("emb").get("src"))
 
         self.embed_tgt = Embed(self.trg_n_tokens,
                                kwargs["decoder"]["emb_size"],
@@ -278,7 +281,9 @@ class Seq2SeqTransformer(Seq2SeqBase):
         self.tie_projections = tie_projections
 
         self.embed_src = Embed(self.src_n_tokens, emb_size, scale=True,
-                               padding_idx=kwargs.get("enc_padding_idx", 0))
+                               padding_idx=kwargs.get("enc_padding_idx", 0)
+                               embedding_path=kwargs.get("embedding_path"),
+                               vocab=kwargs.get("vocab"))
         self.embed_tgt = Embed(self.trg_n_tokens, emb_size, scale=True,
                                padding_idx=kwargs.get("dec_padding_idx", 0))
 

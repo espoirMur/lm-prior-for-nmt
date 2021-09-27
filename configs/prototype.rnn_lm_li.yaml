@@ -45,7 +45,6 @@ data:
 model:
   mode: LM # LM,  AE
   type: rnn
-
   emb_trainable: False
   emb_size: 50
   emb_dropout: 0.1

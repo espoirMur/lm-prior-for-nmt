@@ -322,32 +322,3 @@ if __name__ == "__main__":
     if args.ref is not None:
         bleu = compute_bleu_score(args.out, args.ref)
         print(f"BLEU:{bleu}")
-
-    # # --------------------------------------------------------------------
-    # # --------------------------------------------------------------------
-    # # seq2seq.proto_entr_deep
-    # checkpoint = "../experiments/trans.deen_base/20-12-21_21:41:08/trans.deen_base_best.pt"
-    # # lm = "../checkpoints/prior.lm_news_en_best.pt"
-    # lm = None
-    # src_file = "../datasets/mt/wmt_ende/test.de.pp"
-    # out_file = "../datasets/mt/wmt_ende/test.en.pp.hyps"
-    # ref_file = "../datasets/mt/wmt_ende/test.en.pp"
-    # beam_size = 2
-    # length_penalty = 1
-    # # fusion = "shallow"
-    # fusion = None
-    # fusion_a = 0.0
-    # batch_tokens = 2000
-    # device = "cpu"
-    #
-    # seq2seq_translate(checkpoint=checkpoint,
-    #                   src_file=src_file,
-    #                   out_file=out_file,
-    #                   beam_size=beam_size,
-    #                   length_penalty=length_penalty,
-    #                   lm=lm,
-    #                   fusion=fusion,
-    #                   fusion_a=fusion_a,
-    #                   batch_tokens=batch_tokens, device=device)
-    # bleu = get_bleu_score(out_file, ref_file)
-    # print(f"BLEU:{bleu}")

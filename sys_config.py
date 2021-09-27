@@ -4,26 +4,26 @@ from pathlib import Path
 import torch
 
 print("torch:", torch.__version__)
-# print("Cuda:", torch.backends.cudnn.is_available())
+print("Cuda:", torch.backends.cudnn.is_available())
 print("CuDNN:", torch.backends.cudnn.version())
 # os.environ['CUDA_VISIBLE_DEVICES'] = "5"
 CACHING = False
 # CACHING = False
 RANDOM_SEED = 1618
 
-BASE_DIR = Path.cwd()
+BASE_DIR = Path.cwd().parent
 
-MODEL_CNF_DIR = os.path.join(BASE_DIR, "configs")
+MODEL_CNF_DIR = BASE_DIR.joinpath("configs")
 
 
-TRAINED_PATH = os.path.join(BASE_DIR, "checkpoints")
+TRAINED_PATH = BASE_DIR.joinpath("checkpoints")
 
 DATA_DIR = BASE_DIR.joinpath("data")
 
 EMBS_PATH = BASE_DIR.joinpath("data", "embeddings")
 
 
-EXP_DIR = os.path.join(BASE_DIR, 'experiments')
+EXP_DIR = BASE_DIR.joinpath('experiments')
 
 MODEL_DIRS = ["models", "modules", "helpers"]
 
@@ -36,9 +36,6 @@ VIS = {
     "http_proxy_port": None,
     "log_to_filename": os.path.join(BASE_DIR, "vis_logger.json")
 }
-
-VIS["enabled"] = 8097
-VIS["server"] = "http://localhost"
 
 
 

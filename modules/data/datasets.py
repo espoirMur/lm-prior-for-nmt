@@ -62,7 +62,9 @@ class BaseSequenceDataset(Dataset, ABC):
             self.tokenize = MosesTokenizer(lang=lang).tokenize
 
         # > Build Vocabulary --------------------------------------------
-        self.vocab, is_vocab_built = self.init_vocab(vocab, subword_path, oovs)
+
+        # TODO : need improve the preprocessing before building the vocabulary
+        self.vocab, is_vocab_built = self.init_vocab(vocab, subword_path, oovs, self.input, self.tokenize)
 
         # > Cache text file ---------------------------------------------
         self.lengths = []
@@ -117,7 +119,7 @@ class BaseSequenceDataset(Dataset, ABC):
         self.lengths = numpy.array(self.lengths)
 
     @staticmethod
-    def init_vocab(vocab=None, subword_path=None, oovs=0):
+    def init_vocab(vocab=None, subword_path=None, oovs=0, file=None, preprocess=None):
         _is_prebuilt = True
 
         # use the given vocab
@@ -131,8 +133,8 @@ class BaseSequenceDataset(Dataset, ABC):
 
         # build vocab from the tokens in the dataset
         else:
-            _vocab = Vocab(oovs=oovs, subword=subword_path)
-            _vocab.reset()
+            _vocab = Vocab(oovs=oovs, subword=subword_path, file=file, preprocess=preprocess)
+            # _vocab.reset() # why are they reseting it here???
             _is_prebuilt = False
         return _vocab, _is_prebuilt
 

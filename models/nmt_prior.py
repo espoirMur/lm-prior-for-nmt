@@ -1,8 +1,6 @@
 import os
-
 from torch import nn
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
-
 from helpers.opts import exp_options
 from helpers.training import load_checkpoint
 from helpers.transfer import freeze_module
@@ -53,14 +51,22 @@ def run(config):
     # Initialize Model and Priors
     # -------------------------------------------------------------------------
     model_type = config["model"].get("type", "rnn")
-    src_ntokens = len(val_loader.dataset.src.vocab)
-    trg_ntokens = len(val_loader.dataset.trg.vocab)
+    src_ntokens = len(train_loader.dataset.src.vocab)
+    trg_ntokens = len(train_loader.dataset.trg.vocab)
 
     # Initialize Model
     if model_type == "rnn":
-        model = Seq2SeqRNN(src_ntokens, trg_ntokens, **config["model"])
+        model = Seq2SeqRNN(src_ntokens,
+                           trg_ntokens,
+                           source_vocab=train_loader.dataset.src.vocab,
+                           target_vocab=train_loader.dataset.trg.vocab,
+                           **config["model"])
     elif model_type == "transformer":
-        model = Seq2SeqTransformer(src_ntokens, trg_ntokens, **config["model"])
+        model = Seq2SeqTransformer(src_ntokens, 
+                                   trg_ntokens, 
+                                   source_vocab=train_loader.dataset.src.vocab,
+                                   target_vocab=train_loader.dataset.trg.vocab,
+                                   **config["model"])
     else:
         raise NotImplementedError
 
@@ -131,13 +137,12 @@ def run(config):
 
 
 if __name__ == "__main__":
-    _config = exp_options(os.path.join(MODEL_CNF_DIR,
-                                       # "seq2seq_proto_elen.yaml"
-                                       # "seq2seq_proto_elen_trans.yaml"
-                                       "transformer/trans.deen_base.yaml"
-                                       ))
-    # _config["cores"] = 0
-    # _config["pin_memory"] = False
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, help="configuration file")
+    args, extra_args = parser.parse_known_args()
+    default_config = os.path.join(MODEL_CNF_DIR, args.config)
+    print("the default configurations are ", default_config)
+    _config = exp_options(default_config)
     trained_model = run(_config)
 
     eval_best(trained_model)

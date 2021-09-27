@@ -1,10 +1,9 @@
 import math
-
 import torch
 from torch import nn
 from torch.distributions import Normal
 from torch.nn import functional as F
-
+from modules.readers import EmbeddingsReader
 from modules.helpers import sequence_mask, masked_normalization_inf, \
     masked_normalization
 from modules.initializations import _init_tensor
@@ -150,7 +149,9 @@ class Embed(nn.Module):
                  layer_norm=False,
                  max_norm=None,
                  padding_idx=0,
-                 scale=False):
+                 scale=False,
+                 embedding_path=None,
+                 vocab=None):
         super(Embed, self).__init__()
 
         self.layer_norm = layer_norm
@@ -158,12 +159,13 @@ class Embed(nn.Module):
         self.max_norm = max_norm
         self.noise = noise
         self.scale = scale
+        self.vocab = vocab
+        self.embedding_path = embedding_path
 
-        self.embedding = nn.Embedding(num_embeddings=num_embeddings,
-                                      embedding_dim=embedding_dim,
-                                      # max_norm=max_norm,
-                                      padding_idx=padding_idx)
-        self.embedding.weight.requires_grad = self.trainable
+        if self.embedding_path and self.vocab:
+            self.build_embedding_from_pretrained()
+        else:
+            self.build_embedding()
 
         # the dropout "layer" for the word embeddings
         self.emb_dropout = nn.Dropout(emb_dropout)
@@ -184,12 +186,6 @@ class Embed(nn.Module):
         _init_tensor(self.embedding.weight, "normal",
                      self.embedding.embedding_dim)
         torch.nn.init.constant_(self.embedding.weight[0], 0)
-
-    def transfer_weights(self, embeddings):
-        self.embedding = nn.Embedding.from_pretrained(
-            torch.from_numpy(embeddings).float(), not self.trainable,
-            max_norm=self.max_norm, padding_idx=0)
-        self.embedding.weight.data[0].zero_()
 
     def _emb_hook(self, grad):
         return grad * self.grad_mask.unsqueeze(1).type_as(grad)
@@ -246,6 +242,19 @@ class Embed(nn.Module):
         embeddings = self.regularize(embeddings)
 
         return embeddings
+
+    def build_embeddding(self):
+        """
+        build the word embedding matrix
+        """
+        self.embedding = nn.Embedding(num_embeddings=num_embeddings,
+                                      embedding_dim=embedding_dim,
+                                      # max_norm=max_norm,
+                                      padding_idx=padding_idx)
+        self.embedding.weight.requires_grad = self.trainable
+    
+    def build_embedding_from_pretrained(self):
+        self.embedding = EmbeddingsReader.from_binary(self.embedding_path, sel.vocab, unif=0.25)
 
 
 class SelfAttention(nn.Module):

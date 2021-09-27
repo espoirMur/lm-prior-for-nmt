@@ -1,6 +1,6 @@
 epochs: 200
 batch_tokens: 10000
-parallel: False
+parallel: True
 pin_memory: False
 
 logging:
@@ -17,7 +17,7 @@ init:
   embed_init: "xavier_uniform"
 
 optim:
-  optimizer: radam
+  optimizer: ranger
   lr: 0.0003
   k: 10
   weight_decay: 0.0
@@ -47,30 +47,26 @@ data:
   val_path: ../data/processed/mono/ln_mono_val.pp
   subword_path:
 
-  seq_len: 250
+  seq_len: 125
   sos: True
   oovs: 0
-  vocab_size:
+  vocab_size: 50000
   embeddings: ../data/embeddings/lingala_embeddings_fasttext/embedding_50_all_lingala_corpus.bin
 
 model:
   mode: LM
   type: rnn
-
-  emb_trainable: True
-  emb_size: 512
+  emb_trainable: False
+  emb_size: 50
   emb_dropout: 0.1
   emb_layer_norm: False
   emb_max_norm:
-
   inp_dropout: 0.0
-  rnn_size: 1024
+  rnn_size: 256
   rnn_layers: 2
   rnn_dropout: 0.1
   rnn_layer_norm: False
   rnn_type: LSTM
-
   out_layer_norm: False
   tie_projections: True
-
   countdown: False
