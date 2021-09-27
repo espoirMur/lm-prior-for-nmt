@@ -160,12 +160,15 @@ class Embed(nn.Module):
         self.noise = noise
         self.scale = scale
         self.vocab = vocab
+        self.num_embeddings = num_embeddings
+        self.embedding_dim = embedding_dim
         self.embedding_path = embedding_path
+        self.padding_idx = padding_idx
 
         if self.embedding_path and self.vocab:
             self.build_embedding_from_pretrained()
         else:
-            self.build_embedding()
+            self.build_embeddings()
 
         # the dropout "layer" for the word embeddings
         self.emb_dropout = nn.Dropout(emb_dropout)
@@ -243,18 +246,18 @@ class Embed(nn.Module):
 
         return embeddings
 
-    def build_embeddding(self):
+    def build_embeddings(self):
         """
         build the word embedding matrix
         """
-        self.embedding = nn.Embedding(num_embeddings=num_embeddings,
-                                      embedding_dim=embedding_dim,
+        self.embedding = nn.Embedding(num_embeddings=self.num_embeddings,
+                                      embedding_dim=self.embedding_dim,
                                       # max_norm=max_norm,
-                                      padding_idx=padding_idx)
+                                      padding_idx=self.padding_idx)
         self.embedding.weight.requires_grad = self.trainable
     
     def build_embedding_from_pretrained(self):
-        self.embedding = EmbeddingsReader.from_binary(self.embedding_path, sel.vocab, unif=0.25)
+        self.embedding = EmbeddingsReader.from_binary_fasttext(self.embedding_path, self.vocab, unif=0.25)
 
 
 class SelfAttention(nn.Module):

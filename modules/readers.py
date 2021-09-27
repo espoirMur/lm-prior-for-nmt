@@ -3,6 +3,7 @@ from torch import nn
 from gensim.models import FastText
 import numpy as np
 from tqdm import tqdm
+from pathlib import Path
 
 
 class EmbeddingsReader:
@@ -50,6 +51,7 @@ class EmbeddingsReader:
         """
 
         vocab_size = len(vocab)
+        filename = Path.cwd().joinpath(filename).__str__()
         model = FastText.load(filename)
         weight = np.zeros((vocab_size, model.vector_size))
         for word in ['<pad>', '<sos>', '<eos>']:

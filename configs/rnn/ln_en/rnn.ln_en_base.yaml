@@ -1,4 +1,4 @@
-epochs: 200
+epochs: 2
 batch_tokens: 10000
 
 logging:
@@ -78,7 +78,7 @@ transfer:
 
   # transfer from pretrained embeddings
   emb:
-    src: ../data/embeddings/lingala_embeddings_fasttext/embedding_50_all_lingala_corpus.bin
+    src: data/embeddings/lingala_embeddings_fasttext/embedding_50_all_lingala_corpus.bin
   # trg:
   # zero_mean: True
   # max_norm: False
@@ -136,3 +136,7 @@ model:
 cores: 8
 pin_memory: False
 parallel: True
+device:
+src_dirs:
+resume_state_id:
+name: "first experiment"

@@ -1,5 +1,8 @@
 import os
+import argparse
 from torch import nn
+from yaml import load
+from pathlib import Path
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 from helpers.opts import exp_options
 from helpers.training import load_checkpoint
@@ -60,12 +63,14 @@ def run(config):
                            trg_ntokens,
                            source_vocab=train_loader.dataset.src.vocab,
                            target_vocab=train_loader.dataset.trg.vocab,
+                           source_embeddings_path=config.get("transfer").get("emb").get("src"),
                            **config["model"])
     elif model_type == "transformer":
-        model = Seq2SeqTransformer(src_ntokens, 
-                                   trg_ntokens, 
+        model = Seq2SeqTransformer(src_ntokens,
+                                   trg_ntokens,
                                    source_vocab=train_loader.dataset.src.vocab,
                                    target_vocab=train_loader.dataset.trg.vocab,
+                                   source_embeddings_path=config.get("transfer").get("emb").get("src"),
                                    **config["model"])
     else:
         raise NotImplementedError
@@ -140,9 +145,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', type=str, help="configuration file")
     args, extra_args = parser.parse_known_args()
-    default_config = os.path.join(MODEL_CNF_DIR, args.config)
-    print("the default configurations are ", default_config)
-    _config = exp_options(default_config)
+    config_path = Path.cwd().joinpath('configs', args.config)
+    with open(config_path, 'r') as config_file:
+        _config = load(config_file)
     trained_model = run(_config)
 
     eval_best(trained_model)
