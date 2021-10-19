@@ -1,5 +1,6 @@
 import os
 import argparse
+import torch
 from torch import nn
 from yaml import load
 from pathlib import Path
@@ -148,6 +149,7 @@ if __name__ == "__main__":
     config_path = Path.cwd().joinpath('configs', args.config)
     with open(config_path, 'r') as config_file:
         _config = load(config_file)
+        # the above line can be improved
     trained_model = run(_config)
 
     eval_best(trained_model)

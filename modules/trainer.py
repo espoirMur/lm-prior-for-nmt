@@ -34,7 +34,7 @@ class Trainer:
                  **kwargs):
 
         self.config = config
-        self.device = device
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.epoch = 0
         self.step = 0
         self.failed_batches = 0
@@ -67,7 +67,9 @@ class Trainer:
         # -----------------------------------------------------------------
         # Model definition
         # -----------------------------------------------------------------
-        self.model.to(device)
+        print("*** the device ****")
+        print(self.device)
+        self.model.to(self.device)
         print(self.model)
 
         total_params = sum(p.numel() for p in self.model.parameters())
@@ -76,6 +78,13 @@ class Trainer:
 
         print("Total Params:", number_h(total_params))
         print("Total Trainable Params:", number_h(total_trainable_params))
+        print('Using device:', self.device)
+        # Additional Info when using cuda
+        if self.device.type == 'cuda':
+            print(torch.cuda.get_device_name(0))
+            print('Memory Usage:')
+            print('Allocated:', round(torch.cuda.memory_allocated(0)/1024**3,1), 'GB')
+            print('Cached:   ', round(torch.cuda.memory_reserved(0)/1024**3,1), 'GB')
 
         # -----------------------------------------------------------------
         # Experiment definition - Resume training from interrupted state

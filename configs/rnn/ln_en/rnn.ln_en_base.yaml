@@ -1,5 +1,5 @@
-epochs: 2
-batch_tokens: 10000
+epochs: 1
+batch_tokens: 2500
 
 logging:
   log_interval: 50
@@ -45,11 +45,11 @@ data:
   trg:
     train_path: ./data/processed/enln/train.en.pp
     val_path: ./data/processed/enln/dev.en.pp
-    test_path: ././data/processed/enln/test.en.pp
+    test_path: ./data/processed/enln/test.en.pp
     subword_path:
     lang: en
 
-  seq_len: 1000
+  seq_len: 500
   lowercase: True
   sos: True
   streaming: False
@@ -96,13 +96,13 @@ model:
 
   encoder:
     emb_trainable: False # train embedding layer
-    emb_size: 256 # embedding layer size
+    emb_size: 128 # embedding layer size
     emb_noise: 0.0 # std for additive gaussian noise
     emb_dropout: 0.3 # dropout to the embedding layer
     emb_layer_norm: False # apply LayerNorm to the embedding layer
     inp_dropout: 0. # drop input tokens
 
-    rnn_size: 256 # size of the RNN layer
+    rnn_size: 128 # size of the RNN layer
     rnn_layers: 2 # number of RNN layers
     rnn_dropout: 0.3 # dropout to RNN outputs
     rnn_layer_norm: False # apply LayerNorm to RNN outputs
@@ -111,13 +111,13 @@ model:
 
   decoder:
     emb_trainable: True # train embedding layer
-    emb_size: 512 # embedding layer size
+    emb_size: 256 # embedding layer size
     emb_noise: 0.0 # std for additive gaussian noise
     emb_dropout: 0.3 # dropout to the embedding layer
     emb_layer_norm: False # apply LayerNorm to the embedding layer
     inp_dropout: 0. # drop input tokens
 
-    rnn_size: 256 # size of the RNN layer
+    rnn_size: 128 # size of the RNN layer
     rnn_layers: 2 # number of RNN layers
     rnn_dropout: 0.3 # dropout to RNN outputs
     rnn_layer_norm: False # apply LayerNorm to RNN outputs
@@ -136,7 +136,7 @@ model:
 cores: 8
 pin_memory: False
 parallel: True
-device:
+device: auto
 src_dirs:
 resume_state_id:
-name: "first experiment"
+name: "lingala_english_nmt_with_fasttext_lingala"

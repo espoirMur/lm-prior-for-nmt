@@ -11,7 +11,10 @@ CACHING = False
 # CACHING = False
 RANDOM_SEED = 1618
 
-BASE_DIR = Path.cwd().parent
+BASE_DIR = Path.cwd()
+
+print(BASE_DIR)
+print(10 * "****")
 
 MODEL_CNF_DIR = BASE_DIR.joinpath("configs")
 
@@ -28,7 +31,7 @@ EXP_DIR = BASE_DIR.joinpath('experiments')
 MODEL_DIRS = ["models", "modules", "helpers"]
 
 VIS = {
-    "server": "http://localhost",
+    "server": "http://0.0.0.0",
     "enabled": True,
     "port": 8097,
     "base_url": "/",
