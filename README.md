@@ -25,20 +25,41 @@ be probable under the distributions of the LM.
  
 ### Install Requirements
 
+**Create Environment (Optional)**: Ideally, you should create an environment 
+for the project.
 
-Make sure you have poetry and python `3.7.5`.
+```
+conda create -n lmprior python=3
+conda activate lmprior
+```
 
-- Create a virtual environent using `poetry shell`
-
-- Install the requirement using `poetry install`
+Install PyTorch `1.4` ([guide](https://pytorch.org/get-started/previous-versions/#v140)) 
+with the desired Cuda version if you want to use the GPU:
+```shell
+# CUDA 10.1
+pip install torch==1.4.0 torchvision==0.5.0
+```
+and then the rest of the requirements:
+```
+pip install -r requirements.txt
+```
 
 ### Download Data
 
-I am using [dvc](https://dvc.org/) to pull and install all the data I am using for this project.
+**1. Parallel data**: 
+You can download the preprocessed data, the truecase models and the pretrained sentencepiece models from this link:
+http://data.statmt.org/cbaziotis/projects/lm-prior/parallel. 
+Put the `wmt_ende` and `wmt_entr` folders in the `datasets/mt/` directory. 
 
-You call pull the data from the private bucket I am using to store it using the following command :
-
-- `dvc pull`
+To prepare the data on your own: 
+ 1. run `datasets/mt/download_data.sh`
+ 2. run `datasets/mt/preprocess_parallel.sh`
+ 
+ 
+**2. Monolingual data**: 
+You can download the preprocessed data from this link:
+http://data.statmt.org/cbaziotis/projects/lm-prior/mono and then put the files in 
+the `datasets/mono/priors/` directory.
 
 
 # Training
