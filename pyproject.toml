@@ -10,7 +10,7 @@ typing = "~=3.6.6"
 PyYAML = "~=5.1"
 sacrebleu = "~=1.4.2"
 matplotlib = "~=3.0.3"
-tqdm = "~=4.43.0"
+tqdm = "^4.62.3"
 transformers = "~=2.8.0"
 pandas = "1.1.5"
 seaborn = "~=0.9.0"
@@ -31,6 +31,7 @@ Jinja2 = "^3.0.1"
 ipykernel = "^6.4.1"
 graphviz = "^0.17"
 numpy = "1.21.1"
+dvc = {version = "2.4.3", extras = ["gs"]}
 
 [tool.poetry.dev-dependencies]
 pycodestyle = "^2.7.0"
